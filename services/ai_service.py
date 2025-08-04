@@ -2,7 +2,7 @@ import os
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_openai import ChatOpenAI
-from services.location_service import get_nearby_places
+from services.location_service import get_nearby_places, get_nearby_places_from_tripadvisor
 
 # Load LLM
 def load_llm(provider="google"):
@@ -20,7 +20,7 @@ def load_llm(provider="google"):
 
 def get_ai_suggestion(latitude: float, longitude: float, user_preferences: str, db):
     # Fetch real-time data
-    places = get_nearby_places(latitude, longitude, user_preferences)
+    places = get_nearby_places_from_tripadvisor(latitude, longitude, "")
 
     # Create a prompt with the fetched data
     prompt = ChatPromptTemplate.from_template("""
