@@ -13,7 +13,7 @@ def get_user_preferences(user_id: str, db: Session = Depends(get_db)):
 
 @router.post("/users/{user_id}/preferences", response_model=UserPreference)
 def create_user_preference(user_id: str, preference: UserPreferenceCreate, db: Session = Depends(get_db)):
-    db_preference = db_UserPreference(**preference.dict(), user_id=user_id)
+    db_preference = db_UserPreference(**preference.model_dump(), user_id=user_id)
     db.add(db_preference)
     db.commit()
     db.refresh(db_preference)
@@ -30,7 +30,7 @@ def update_user_preference(user_id: str, preference_id: int, preference: UserPre
     db.refresh(db_preference)
     return db_preference
 
-@router.delete("/users/{user_id}/preferences/{preference_id}", status_code=204)
+@router.delete("/users/{user_id}/preferences/{preference_id}")
 def delete_user_preference(user_id: str, preference_id: int, db: Session = Depends(get_db)):
     db_preference = db.query(db_UserPreference).filter(db_UserPreference.id == preference_id, db_UserPreference.user_id == user_id).first()
     if not db_preference:
